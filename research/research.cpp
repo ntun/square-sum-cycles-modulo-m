@@ -25,9 +25,9 @@ void test_alg_casebycase(); // test for each # of nodes and mod value
 
 int main() {
 
-	//est_alg_prime();
-	//test_alg_nonprime();
-	test_alg_casebycase();
+	//test_alg_prime();
+	test_alg_nonprime();
+	//test_alg_casebycase();
 }
 
 vector<int> calcSquareMod(int mod_num) {
@@ -94,7 +94,7 @@ int** adjMatrix(int num_nodes, int mod, vector<int> squareMod, int& num_edges) {
 	 * 		  in of squareMod, then connect the two vertices via an edge.
 	 *
 	 *  @param: int num_nodes, int mod, vector of squareMod (the residue set), int& num_edges
-	 *  	(Note: num_edges is for tracking the number of edges. num_edges has to be
+	 *  	Note: num_edges is for tracking the number of edges. num_edges has to be
 	 *  		defined before function call and pass it as a function parameter.
 	 *  		Since it is passed by reference, the original num_edges will be changed
 	 *  		as opposed to pass-by-value, which creates a copy of num_edges and the
@@ -109,7 +109,6 @@ int** adjMatrix(int num_nodes, int mod, vector<int> squareMod, int& num_edges) {
 	// Thus, this is the 2d array
 
 	int** adjMat = new int*[num_nodes];
-
 
 	for (int i = 0; i < num_nodes; i++) { // initialize all entries of adjMat to 0
 		adjMat[i] = new int[num_nodes];
@@ -157,6 +156,7 @@ void printAdjMatrix(int** ptr_adjMat, int num_nodes) {
 	 *
 	 */
 
+
 	cout << "Adjacency matrix: " << endl;
 
 	for (int row = 0; row < num_nodes; row++) {
@@ -181,55 +181,6 @@ void printAdjMatrix(int** ptr_adjMat, int num_nodes) {
 		cout << "(Degree: " << degree << ")" << endl;
 
 	}
-
-	/*
-	cout << "\nWithout rep: " << endl;
-	for (int row = 0; row < num_nodes; row++) {
-
-		int x = 0;
-		for (int col = row+1; col < num_nodes; col++) {
-
-			if (ptr_adjMat[row][col] == 1) {
-				if (x == 0) {
-					cout << row+1 << " connects to ";
-				}
-				cout << col+1 << " ";
-
-				x = 2;
-			}
-		}
-		if (x != 0) {
-			cout << endl;
-		}
-
-	}
-	cout << endl;
-
-	*/
-
-
-	bool visited[num_nodes];
-
-	for (int i = 0; i < num_nodes; i++) {
-		visited[i] = 0;
-	}
-	visited[0] = 1;
-	int count = 1;
-
-	cout << endl << "chosen vertex at (level) for normal DFS: ";
-	for (int row = 0; row < num_nodes; row++) {
-		for (int col = 0; col < num_nodes; col++) {
-			if (ptr_adjMat[row][col] == 1 && !visited[col]) {
-				visited[col] = 1;
-				row = col-1;
-				count++;
-				cout << col+1 << "(" << count << ") ";
-				//cout << "(" << row+1 << ", " << col+1 << ")" << col + 1 << " ";
-				break;
-			}
-		}
-	}
-	cout << endl;
 
 }
 
@@ -281,8 +232,31 @@ vector<int> sievePrimes(int num_nodes) {
 
 bool hamiltonian_cycle(int start_node, int** ptr_adjMat, int num_nodes,
 		bool visited[], int edge_count) {
+	/** This algorithm checks whether a Hamiltonian cycle is present in a graph
+	 *
+	 *  @param: the start node, the adjacency matrix of the graph,
+	 *  		the total number of nodes, an array to track
+	 *  		visited vertices, edges counter
+	 *
+	 *  @return: true if Hamiltonian cycle is present; false otherwise
+	 *
+	 */
 
-	if (edge_count == num_nodes-1 && ptr_adjMat[start_node][0] == 1) {
+	if (edge_count == num_nodes-1 && ptr_adjMat[start_node][0] == 1 && num_nodes > 2) {
+		// this is the base case.
+		// 1. The first disjunct is true if we can find a Hamiltonian
+		//		path from starting from start_node.
+		// 2. The second disjunct is true if there is an edge
+		//		connecting the start and end vertices of the path
+		// 3. The third disjunct is for the case with just 1 or 2 vertices
+		//		where Hamiltonian cycle cannot exist by definition
+		//
+		// Thus, the first conjunct must be true first in order for
+		// the second conjunct to be true.
+		//
+		// So, "edge_count == num_nodes-1" is placed as the first conjunct
+		// to take advantage of the "short-circuiting" property of &&.
+
 		return true;
 	}
 
@@ -295,9 +269,11 @@ bool hamiltonian_cycle(int start_node, int** ptr_adjMat, int num_nodes,
 			visited[col] = true;
 
 			if (hamiltonian_cycle(col, ptr_adjMat, num_nodes, visited, edge_count+1)) {
-				cout << col+1 << "(" << edge_count+2 << ") ";
 				return true;
 			}
+
+			// if hamiltonian_cycle is false,
+			// backtracks it
 			visited[col] = false;
 
 		}
@@ -396,7 +372,6 @@ void test_alg_casebycase() {
 		cout << i << " ";
 	}
 
-	// cout << "(" << squareMod.size() << ")";
 	cout << endl << endl;
 	int num_edges = 0;
 
@@ -413,9 +388,6 @@ void test_alg_casebycase() {
 	cout << endl;
 	cout << boolalpha << "\nHamiltonian cycle present: "
 			<< hamiltonian_cycle(0, ptr_adjMat, num_nodes, visited, 0) << endl << endl;
-
-
-	//hamCycle(ptr_adjMat, num_nodes);
 
 	delete[] ptr_adjMat;
 	delete[] adjMatrix(num_nodes, mod, squareMod, num_edges);
