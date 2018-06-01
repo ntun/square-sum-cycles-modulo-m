@@ -36,7 +36,7 @@ Given a sequence of integers from {1, 2, 3, ..., n}, can we arrange the integers
  
  ## Using test_alg_nonprime()
  
- The same as test_alg_prime(), but k is now **all** integers between 1 and num inclusively.
+ The same as test_alg_prime(), but k is now **all** integers between 2 and num inclusively.
  
  ## Using test_alg_casebycase()
  
