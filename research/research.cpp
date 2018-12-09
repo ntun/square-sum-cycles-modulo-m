@@ -185,56 +185,6 @@ void printAdjMatrix(int** ptr_adjMat, int num_nodes) {
 
 	}
 
-	/*
-	cout << "\nWithout rep: " << endl;
-	for (int row = 0; row < num_nodes; row++) {
-
-		int x = 0;
-		for (int col = row+1; col < num_nodes; col++) {
-
-			if (ptr_adjMat[row][col] == 1) {
-				if (x == 0) {
-					cout << row+1 << " connects to ";
-				}
-				cout << col+1 << " ";
-
-				x = 2;
-			}
-		}
-		if (x != 0) {
-			cout << endl;
-		}
-
-	}
-	cout << endl;
-
-	*/
-
-	/*
-	bool visited[num_nodes];
-
-	for (int i = 0; i < num_nodes; i++) {
-		visited[i] = 0;
-	}
-	visited[0] = 1;
-	int count = 1;
-
-	cout << endl << "chosen vertex at (level) for normal DFS: ";
-	for (int row = 0; row < num_nodes; row++) {
-		for (int col = 0; col < num_nodes; col++) {
-			if (ptr_adjMat[row][col] == 1 && !visited[col]) {
-				visited[col] = 1;
-				row = col-1;
-				count++;
-				cout << col+1 << "(" << count << ") ";
-				//cout << "(" << row+1 << ", " << col+1 << ")" << col + 1 << " ";
-				break;
-			}
-		}
-	}
-	cout << endl;
-	*/
-
 }
 
 vector<int> sievePrimes(int num_nodes) {
@@ -303,13 +253,7 @@ bool hamiltonian_cycle(int start_node, int** ptr_adjMat, int num_nodes,
 		//		connecting the start and end vertices of the path
 		// 3. The third disjunct is for the case with just 1 or 2 vertices
 		//		where Hamiltonian cycle cannot exist by definition
-		//
-		// Thus, the first conjunct must be true first in order for
-		// the second conjunct to be true.
-		//
-		// So, "edge_count == num_nodes-1" is placed as the first conjunct
-		// to take advantage of the "short-circuiting" property of &&.
-
+		
 		return true;
 	}
 
@@ -456,6 +400,5 @@ void test_alg_casebycase() {
 	}
 	
 	delete[] ptr_adjMat;
-
 
 }
