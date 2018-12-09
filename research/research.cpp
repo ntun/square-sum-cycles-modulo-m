@@ -12,6 +12,8 @@
 
 using namespace std;
 
+int nn;
+
 // function prototypes
 vector<int> calcSquareMod(int); // return residue of square mods
 int** adjMatrix(int, int, vector<int>, int&); // return pointer of adjacency matrix
@@ -25,8 +27,8 @@ void test_alg_casebycase(); // test for each # of nodes and mod value
 
 int main() {
 
-	//test_alg_prime();
-	test_alg_nonprime();
+	test_alg_prime();
+	//test_alg_nonprime();
 	//test_alg_casebycase();
 }
 
@@ -107,7 +109,8 @@ int** adjMatrix(int num_nodes, int mod, vector<int> squareMod, int& num_edges) {
 	// pointer to a dynamically allocated array, which consists of
 	// pointers to the arrays too. It is an array of the array.
 	// Thus, this is the 2d array
-
+	nn = num_nodes;
+	//int (*adjMat)[5] = new int[5][5];
 	int** adjMat = new int*[num_nodes];
 
 	for (int i = 0; i < num_nodes; i++) { // initialize all entries of adjMat to 0
@@ -181,6 +184,56 @@ void printAdjMatrix(int** ptr_adjMat, int num_nodes) {
 		cout << "(Degree: " << degree << ")" << endl;
 
 	}
+
+	/*
+	cout << "\nWithout rep: " << endl;
+	for (int row = 0; row < num_nodes; row++) {
+
+		int x = 0;
+		for (int col = row+1; col < num_nodes; col++) {
+
+			if (ptr_adjMat[row][col] == 1) {
+				if (x == 0) {
+					cout << row+1 << " connects to ";
+				}
+				cout << col+1 << " ";
+
+				x = 2;
+			}
+		}
+		if (x != 0) {
+			cout << endl;
+		}
+
+	}
+	cout << endl;
+
+	*/
+
+	/*
+	bool visited[num_nodes];
+
+	for (int i = 0; i < num_nodes; i++) {
+		visited[i] = 0;
+	}
+	visited[0] = 1;
+	int count = 1;
+
+	cout << endl << "chosen vertex at (level) for normal DFS: ";
+	for (int row = 0; row < num_nodes; row++) {
+		for (int col = 0; col < num_nodes; col++) {
+			if (ptr_adjMat[row][col] == 1 && !visited[col]) {
+				visited[col] = 1;
+				row = col-1;
+				count++;
+				cout << col+1 << "(" << count << ") ";
+				//cout << "(" << row+1 << ", " << col+1 << ")" << col + 1 << " ";
+				break;
+			}
+		}
+	}
+	cout << endl;
+	*/
 
 }
 
@@ -269,11 +322,13 @@ bool hamiltonian_cycle(int start_node, int** ptr_adjMat, int num_nodes,
 			visited[col] = true;
 
 			if (hamiltonian_cycle(col, ptr_adjMat, num_nodes, visited, edge_count+1)) {
+				//cout << col+1 << "(" << edge_count+2 << ") ";
 				return true;
 			}
 
 			// if hamiltonian_cycle is false,
 			// backtracks it
+			//edge_count--;
 			visited[col] = false;
 
 		}
@@ -310,8 +365,13 @@ void test_alg_prime() {
 						<< hamiltonian_cycle(0, ptr_adjMat, i, visited, 0)
 						<< endl;
 
+
+		for (int i = 0; i < nn; i++) {
+			delete[] ptr_adjMat[i];
+		}
+		
 		delete[] ptr_adjMat;
-		delete[] adjMatrix(i, i, squareMod, num_edges);
+		
 	}
 
 }
@@ -340,10 +400,11 @@ void test_alg_nonprime() {
 				<< hamiltonian_cycle(0, ptr_adjMat, i, visited, 0)
 				<< endl;
 
-		//hamCycle(ptr_adjMat, i);
-
+		for (int i = 0; i < nn; i++) {
+			delete[] ptr_adjMat[i];
+		}
+		
 		delete[] ptr_adjMat;
-		delete[] adjMatrix(i, i, squareMod, num_edges);
 	}
 
 }
@@ -372,6 +433,7 @@ void test_alg_casebycase() {
 		cout << i << " ";
 	}
 
+	// cout << "(" << squareMod.size() << ")";
 	cout << endl << endl;
 	int num_edges = 0;
 
@@ -389,8 +451,11 @@ void test_alg_casebycase() {
 	cout << boolalpha << "\nHamiltonian cycle present: "
 			<< hamiltonian_cycle(0, ptr_adjMat, num_nodes, visited, 0) << endl << endl;
 
+	for (int i = 0; i < nn; i++) {
+		delete[] ptr_adjMat[i];
+	}
+	
 	delete[] ptr_adjMat;
-	delete[] adjMatrix(num_nodes, mod, squareMod, num_edges);
+
 
 }
-
